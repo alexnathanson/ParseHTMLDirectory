@@ -7,6 +7,7 @@ class HTMLDirectory{
 		this.directory = tempDirectory;
 		this.path = this.ip + this.directory;
 		this.list = [];
+		this.log = false;
 	}
 
 	getDir(){
@@ -19,7 +20,7 @@ class HTMLDirectory{
 	  //the arrow functions maintains the scope
 	  client.onreadystatechange =()=>{
 	  	if(client.readyState === 4 && client.status === 200) {
-		    //console.log(client.responseText);
+		    this.logToConsole(client);
 		    this.parseList(client.responseText);
 		  }
 	  };
@@ -27,21 +28,24 @@ class HTMLDirectory{
 
 	parseList(arg){
 		let fileList=arg.split('\n');
-		//console.log(fileList);
 		for(let i=0;i<fileList.length;i++){
 			//check if the item contains a HREF tag
 			if(fileList[i].includes('HREF')){
 				let fileInfo=fileList[i].split('\"');
-			    //console.log(fileInfo);
 			    for(let f = 0; f<fileInfo.length;f++){
 			    	if(fileInfo[f].includes(this.directory)){
 			    		let len = this.directory.length;
 			    		this.list.push(fileInfo[f].slice(len,fileInfo[f].length));
-			    		//console.log(fileInfo[f].slice(len,fileInfo[f].length));
 			    	}
 			    }
 			}
 		}
-		console.log(this.list);
+		this.logToConsole(this.list);
+	}
+
+	logToConsole(arg){
+		if(this.log == true){
+			console.log(arg);
+		}
 	}
 }
